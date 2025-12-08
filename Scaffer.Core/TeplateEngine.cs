@@ -20,9 +20,8 @@ public static class TemplateEngine
             
         }
 
-        // 4. Reemplazar {{value:name}} en el template
         template = Regex.Replace(template,
-            @"\{\{value:([A-Za-z0-9_]+)\}\}",
+            @"\{\{\s*value\s*:\s*([A-Za-z0-9_]+)\s*\}\}",
             m =>
             {
                 var key = m.Groups[1].Value;

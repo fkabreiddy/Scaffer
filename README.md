@@ -87,7 +87,7 @@ Use your params values in the `@Template` directive
 
 ## 📦 `.scaff` file example
 
-`MyClassTemplate.scaff`
+`test.scaff`
 
 ```csharp
 
@@ -124,10 +124,10 @@ namespace MyApp.Services
 
 
 
-build command
+build command (make sure to be on the `.scaff` file directory)
 
 ```bash
-scaff build CSharpHook.scaff 
+scaff --scaff-build test 
     --scaff-param name=UserService 
     --scaff-param type=string 
     --scaff-param initial="John Doe"

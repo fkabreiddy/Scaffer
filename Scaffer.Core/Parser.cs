@@ -38,13 +38,15 @@ public static class ScaffParser
             }
         }
 
-        var templateMatch = Regex.Match(content, @"@Template\s*\(\s*`([\s\S]*?)`\s*\)", RegexOptions.Multiline);
+        var templateMatch = Regex.Match(content, @"@Template\(""([\s\S]*?)""\)", RegexOptions.Multiline);
       
         if (templateMatch.Success)
         {
             result.Template = templateMatch.Groups[1].Value.Trim();
         }
         
+        
+
         var paramsMatch = Regex.Match(content, @"@Params\s*\(\s*([\s\S]*?)\s*\)", RegexOptions.Multiline);
         if (paramsMatch.Success)
         {
@@ -67,6 +69,10 @@ public static class ScaffParser
             }
             Console.WriteLine();
 
+        }
+        else
+        {
+            Console.WriteLine("No @Params directive was found. The parameters from the @Template may not be asigned correctly", ConsoleColor.Yellow);
         }
         
         return result;
