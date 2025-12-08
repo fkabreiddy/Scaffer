@@ -85,9 +85,9 @@ Params are by default optional but you can add a fallback to them.
 Use your params values in the `@Template` directive
 
 ```bash
-@Template(
+@Template("
  <p>{{value:name}}</p>
-)
+")
 ```
 
 
