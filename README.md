@@ -27,6 +27,10 @@ scoop install scaffer
 #test
 
 scaff --scaff-help
+
+#update
+scoop update // to update the buckets
+scoop update scaffer
  ```
 
 
