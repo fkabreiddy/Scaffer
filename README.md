@@ -1,44 +1,50 @@
-# Scaffer CLI
+# Scaffer
 
-Universal cross-language scaffolding generator — simple, fast, and framework-agnostic.
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/fkabreiddy/Scaffer)
+![Platform](https://img.shields.io/badge/platform-win-blue)
 
+**Universal Scaffolding Generator CLI.** Scaffer is a command-line tool designed to generate project structures and files quickly and efficiently.
 
-
----
-
-## ✨ What is Scaffer?
-
-**Scaffer** is a universal scaffolding generator that uses simple `.scaff` template files  
-to create files for **any language or framework** (C#, HTML, JS, React, Python, etc.).
-
-It includes:
-
-- 🛠 A powerful CLI (`scaff`)
-- 📦 Simple scaffold templates
-- 🔧 Parameter injection
-- 🧩 Optional parameters with fallback
-- 🚀 Cross-platform support (Windows, Linux, macOS)
+> **Note:** Currently, official support and testing are focused on **Windows**. macOS and Linux versions are considered experimental.
 
 ---
 
-## Installation
+## 📦 Installation
 
-Install globally from NuGet:
+The recommended way to install Scaffer on Windows is via **Scoop**.
 
-```bash
-dotnet tool install -g Scaffer
+### 🪟 Via Scoop (Recommended)
+
+If you already have [Scoop](https://scoop.sh/) installed, simply run these two commands in PowerShell:
+
+```powershell
+# 1. Add the official bucket
+scoop bucket add Scaffer https://github.com/fkabreiddy/scaffer-scoop-bucket
+
+# 2. Install the tool
+scoop install scaffer
+
+#test
+
+scaff --scaff-help
  ```
-## Update
 
-```bash
-dotnet tool update -g Scaffer
-```
 
-## Uninstall
+## 🛠 Manual Installation
+If you prefer not to use package managers:
 
-```bash
-dotnet tool uninstall -g Scaffer
-```
+Go to the Releases section.
+
+Download the .zip file for Windows (scaffer-win-x64...).
+
+Unzip it into a safe folder.
+
+(optional) rename the Scaffer.CLI.exe into scaffer.exe so you can call `scaffer --scaff-build ...` instead of `Scaffer.CLI.exe --scaff-build...`
+
+Add that folder to your Environment Variables (PATH) to use the scaffer command from any terminal.
+
+
+
 
 ## Syntax
 
@@ -79,9 +85,9 @@ Params are by default optional but you can add a fallback to them.
 Use your params values in the `@Template` directive
 
 ```bash
-@Template(
+@Template("
  <p>{{value:name}}</p>
-)
+")
 ```
 
 
