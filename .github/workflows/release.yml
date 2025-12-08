@@ -46,6 +46,12 @@ jobs:
         cd build_mac
         zip -r "../dist/scaffer-macos-arm64-${{ github.ref_name }}.zip" .
 
+    - name: 🍎 Build macOS (Intel)
+      run: |
+        dotnet publish ./Scaffer.CLI/Scaffer.CLI.csproj -c Release -r osx-x64 /p:PublishSingleFile=true --self-contained -o build_mac_intel
+        cd build_mac_intel
+        zip -r "../dist/scaffer-macos-x64-${{ github.ref_name }}.zip"
+
     # --- HASHES Y PUBLICACIÓN ---
 
     - name: 🔐 Generar Checksums (SHA256)
