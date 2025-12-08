@@ -29,20 +29,20 @@ jobs:
 
     - name: 🪟 Build Windows (x64)
       run: |
-        dotnet publish ./Scaffer.CLI/Scaffer.csproj -c Release -r win-x64 /p:PublishSingleFile=true --self-contained -o build_win
+        dotnet publish ./Scaffer.CLI/Scaffer.CLI.csproj -c Release -r win-x64 /p:PublishSingleFile=true --self-contained -o build_win
         cd build_win
         # AQUÍ ESTÁ EL CAMBIO: Agregamos ${{ github.ref_name }} al nombre
         zip -r "../dist/scaffer-win-x64-${{ github.ref_name }}.zip" .
 
     - name: 🐧 Build Linux (x64)
       run: |
-        dotnet publish ./Scaffer.CLI/Scaffer.csproj -c Release -r linux-x64 /p:PublishSingleFile=true --self-contained -o build_linux
+        dotnet publish ./Scaffer.CLI/Scaffer.CLI.csproj -c Release -r linux-x64 /p:PublishSingleFile=true --self-contained -o build_linux
         cd build_linux
         zip -r "../dist/scaffer-linux-x64-${{ github.ref_name }}.zip" .
 
     - name: 🍎 Build macOS (Apple Silicon)
       run: |
-        dotnet publish ./Scaffer.CLI/Scaffer.csproj -c Release -r osx-arm64 /p:PublishSingleFile=true --self-contained -o build_mac
+        dotnet publish ./Scaffer.CLI/Scaffer.CLI.csproj -c Release -r osx-arm64 /p:PublishSingleFile=true --self-contained -o build_mac
         cd build_mac
         zip -r "../dist/scaffer-macos-arm64-${{ github.ref_name }}.zip" .
 
