@@ -2,41 +2,22 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework> 
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+        
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        
+        </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Scaffer.Core\Scaffer.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.CommandLine" Version="2.0.0" />
-    </ItemGroup>
-
-    <PropertyGroup>
-        <PackAsTool>true</PackAsTool>
-        <ToolCommandName>scaffer</ToolCommandName>
-        <PackageOutputPath>./nupkg</PackageOutputPath>
-        <Version>1.0.0</Version>
-        <Authors>Breiddy Saur Cruz García</Authors>
-        <Description>Universal scaffolding generator CLI</Description>
-        <PackageProjectUrl>https://github.com/fkabreiddy/Scaffer</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/fkabreiddy/Scaffer</RepositoryUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <PackageId>Scaffer</PackageId>
-
-
-    </PropertyGroup>
-    <PropertyGroup>
-        <AssemblyName>Scaffer</AssemblyName>
-        <RootNamespace>Scaffer</RootNamespace>
-    </PropertyGroup>
-    <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
-        <None Include="LICENSE" Pack="true" PackagePath="\" />
+      <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
 </Project>

@@ -42,3 +42,11 @@ Desktop.ini
 TestResults/
 coverage/
 coverage.json
+
+##compilador de .net
+bin/
+obj/
+
+
+##tests
+build.psm1
