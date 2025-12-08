@@ -43,13 +43,13 @@ internal class Program
                 return 0;
             }
 
-            WriteLineColor("Invalid command", ConsoleColor.Red);
+            ConsoleHelper.WriteLineColor("Invalid command", ConsoleColor.Red);
             Console.WriteLine("Use '--scaff-help' to see available commands");
             return 1;
         }
         catch (Exception ex)
         {
-            WriteLineColor($"Error {ex.InnerException?.Message ?? ex.Message}", ConsoleColor.Red);
+            ConsoleHelper.WriteLineColor($"Error {ex.InnerException?.Message ?? ex.Message}", ConsoleColor.Red);
             return 1;
         }
     }
@@ -96,11 +96,13 @@ internal class Program
             }
             if (!File.Exists(scaffPath))
             {
-                WriteLineColor($"We could no fint the specefied fiel or path '{scaffPath}'", ConsoleColor.Red);
+                ConsoleHelper.WriteLineColor($"We could no fint the specefied fiel or path '{scaffPath}'", ConsoleColor.Red);
                 return;
             }
+            
 
-            WriteLineColor($"Building file from: {scaffPath}", ConsoleColor.Blue);
+            Console.WriteLine();
+            ConsoleHelper.WriteLineColor($"Building file from: {scaffPath}", ConsoleColor.Blue);
 
             var content = await File.ReadAllTextAsync(scaffPath);
             var scaff = new ScaffFile();
@@ -111,7 +113,7 @@ internal class Program
             }
             catch(Exception ex)
             {
-                WriteLineColor(ex.InnerException?.Message ?? ex.Message, ConsoleColor.Red);
+                ConsoleHelper.WriteLineColor(ex.InnerException?.Message ?? ex.Message, ConsoleColor.Red);
                 return;
 
             }
@@ -119,7 +121,7 @@ internal class Program
 
             if (string.IsNullOrEmpty(scaff.Template))
             {
-                WriteLineColor("Your file is missing the @Template directive", ConsoleColor.Red);
+                ConsoleHelper.WriteLineColor("Your file is missing the <<temp> and <tempend>> marks", ConsoleColor.Red);
                 return;
             }
 
@@ -127,13 +129,13 @@ internal class Program
 
             if (string.IsNullOrEmpty(scaffRoute))
             {
-                WriteLineColor("You did not specified the output route. The created file will be added to the current directory or the one from the Output @Meta field", ConsoleColor.DarkYellow);
+                ConsoleHelper.WriteLineColor("You did not specified the output route. The created file will be added to the current directory or the one from the Output @Meta field", ConsoleColor.DarkYellow);
             }
             var finalFileName = scaffOut ?? scaff.Meta.GetValueOrDefault("Name", $"output{new Guid().ToString()}");
             
             if (string.IsNullOrEmpty(scaffOut))
             {
-                WriteLineColor($"You did not specified the name of the file. The created file will be named as output{new Guid().ToString()} or the one specified in the Name @Meta field", ConsoleColor.DarkYellow);
+                ConsoleHelper.WriteLineColor($"You did not specified the name of the file. The created file will be named as output{new Guid().ToString()} or the one specified in the Name @Meta field", ConsoleColor.DarkYellow);
             }
             var extension = scaff.Meta.GetValueOrDefault("Extension", ".txt");
             
@@ -145,15 +147,16 @@ internal class Program
             }
 
             Console.WriteLine($"\u001b[32mDirectory: \u001b[0m {finalOutputDir}");
-            Console.WriteLine($"\u001b[32mExtension: \u001b[0m {finalFileName}{extension}");
-            
+            Console.WriteLine($"\u001b[32mExtension: \u001b[0m {extension}");
+            Console.WriteLine($"\u001b[32mFile Name: \u001b[0m {finalFileName}{extension}");
+
             
             if (parameters.Count > 0)
             {
-                WriteLineColor("Parameters: ", ConsoleColor.Green);
+                ConsoleHelper.WriteLineColor("Parameters: ", ConsoleColor.Green);
                 foreach (var kvp in parameters)
                 {
-                    Console.WriteLine($"   {kvp.Key} => {kvp.Value}");
+                    Console.WriteLine($"{kvp.Key} => {kvp.Value}");
                 }
             }
 
@@ -170,11 +173,11 @@ internal class Program
         
         if (scaffFiles.Length == 0)
         {
-            WriteLineColor("No .scaff files found on the current directory", ConsoleColor.Red);
+            ConsoleHelper.WriteLineColor("No .scaff files found on the current directory", ConsoleColor.Red);
             return;
         }
 
-        WriteLineColor($"{scaffFiles.Length} .scaff files found:", ConsoleColor.Green);
+        ConsoleHelper.WriteLineColor($"{scaffFiles.Length} .scaff files found:", ConsoleColor.Green);
         Console.WriteLine();
 
         foreach (var file in scaffFiles)
@@ -196,7 +199,7 @@ internal class Program
             }
             catch(Exception ex)
             {
-                WriteLineColor(ex.InnerException?.Message ?? ex.Message, ConsoleColor.Red);
+                ConsoleHelper.WriteLineColor(ex.InnerException?.Message ?? ex.Message, ConsoleColor.Red);
             }
             
             Console.WriteLine();
@@ -221,19 +224,13 @@ internal class Program
         Console.WriteLine();
        
         Console.WriteLine("Full example:");
-        Console.WriteLine("  scaff --scaff-build ./templates/page.scaff \\");
-        Console.WriteLine("        --scaff-param title=Home \\");
-        Console.WriteLine("        --scaff-param content=\"Hello World\" \\");
-        Console.WriteLine("        --scaff-route ./output \\");
+        Console.WriteLine("  scaff --scaff-build ./templates/page.scaff");
+        Console.WriteLine("        --scaff-param title=Home");
+        Console.WriteLine("        --scaff-param content=\"Hello World\" ");
+        Console.WriteLine("        --scaff-route ./output");
         Console.WriteLine("        --scaff-out index.html");
     }
 
-    public static void WriteLineColor(string text, ConsoleColor color)
-    {
-        var prev = Console.ForegroundColor;
-        Console.ForegroundColor = color;
-        Console.WriteLine(text);
-        Console.ForegroundColor = prev;
-    }
+   
 }
 

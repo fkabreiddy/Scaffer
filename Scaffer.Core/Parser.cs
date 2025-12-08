@@ -38,7 +38,7 @@ public static class ScaffParser
             }
         }
 
-        var templateMatch = Regex.Match(content, @"@Template\(""([\s\S]*?)""\)", RegexOptions.Multiline);
+        var templateMatch = Regex.Match(content, @"^<<temp\s*([\s\S]*?)\s*tempend>>", RegexOptions.Multiline);
       
         if (templateMatch.Success)
         {
@@ -52,7 +52,8 @@ public static class ScaffParser
         {
             var block = paramsMatch.Groups[1].Value;
             var lineRegex = new Regex(@"^\s*([A-Za-z0-9_]+)\?\?(.*)\s*$", RegexOptions.Multiline);
-            Console.WriteLine("Obtaining parameters from @Params...", ConsoleColor.Blue);
+            ConsoleHelper.WriteLineColor("Obtaining parameters from @Params...", ConsoleColor.Green);
+            Console.WriteLine();
 
             foreach (Match m in lineRegex.Matches(block))
             {
@@ -72,7 +73,8 @@ public static class ScaffParser
         }
         else
         {
-            Console.WriteLine("No @Params directive was found. The parameters from the @Template may not be asigned correctly", ConsoleColor.Yellow);
+            ConsoleHelper.WriteLineColor("No @Params directive was found. The parameters from the <<temp may not be asigned correctly", ConsoleColor.Yellow);
+            Console.WriteLine();
         }
         
         return result;
