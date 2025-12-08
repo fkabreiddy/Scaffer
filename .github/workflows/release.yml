@@ -1,0 +1,35 @@
+name: Publish to NuGet
+
+on:
+  push:
+    tags:
+      - "v*.*.*" # Se activa al pushear un tag como v1.0.1
+
+jobs:
+  publish-nuget:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Usamos tu script para sacar la versión del tag
+      - name: Get Version
+        shell: pwsh
+        run: |
+          Import-Module ./build/GetBuildVersion.psm1
+          $version = GetBuildVersion -RefName $env:GITHUB_REF
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x # Debe coincidir con tu csproj
+
+      # 1. Empaquetar (Crea el .nupkg universal)
+      - name: Create NuGet Package
+        run: dotnet pack Scaffer.CLI/Scaffer.CLI.csproj -c Release -p:Version=$VERSION --output ./nupkg
+
+      # 2. Publicar a NuGet.org
+      - name: Push to NuGet
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

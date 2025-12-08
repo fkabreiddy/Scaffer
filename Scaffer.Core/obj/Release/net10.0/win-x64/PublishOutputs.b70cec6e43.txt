@@ -1,0 +1,3 @@
+C:\Users\breid\OneDrive\Desktop\Scaffer\dist\Scaffer.Core.dll
+C:\Users\breid\OneDrive\Desktop\Scaffer\dist\Scaffer.Core.deps.json
+C:\Users\breid\OneDrive\Desktop\Scaffer\dist\Scaffer.Core.pdb

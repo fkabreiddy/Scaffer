@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffer.Core", "Scaffer.Core\Scaffer.Core.csproj", "{E48339F3-FAE1-4DB6-8169-F34450C594A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffer.CLI", "Scaffer.CLI\Scaffer.CLI.csproj", "{2388164B-83EC-482B-A3ED-D42DF5AD093A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E48339F3-FAE1-4DB6-8169-F34450C594A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E48339F3-FAE1-4DB6-8169-F34450C594A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E48339F3-FAE1-4DB6-8169-F34450C594A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E48339F3-FAE1-4DB6-8169-F34450C594A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2388164B-83EC-482B-A3ED-D42DF5AD093A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2388164B-83EC-482B-A3ED-D42DF5AD093A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2388164B-83EC-482B-A3ED-D42DF5AD093A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2388164B-83EC-482B-A3ED-D42DF5AD093A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
