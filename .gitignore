@@ -1,0 +1,44 @@
+## --- Build & Runtime ---
+[Bb]in/
+[Oo]bj/
+# Archivos de log de compilación
+*.log
+
+## --- NuGet ---
+# No queremos subir los paquetes generados
+*.nupkg
+*.snupkg
+# La carpeta donde configuraste la salida del paquete en tu csproj
+nupkg/
+# Paquetes locales restaurados (si los hubiera)
+packages/
+*.lock.json
+
+## --- IDEs & Editores ---
+# JetBrains Rider (Importante porque lo usas)
+.idea/
+*.sln.iml
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+## --- OS ---
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Mac (Por si colaboras o cambias de PC)
+.DS_Store
+
+## --- Tests & Coverage ---
+TestResults/
+coverage/
+coverage.json
