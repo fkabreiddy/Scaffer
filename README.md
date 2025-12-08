@@ -23,7 +23,28 @@ scoop bucket add Scaffer https://github.com/fkabreiddy/scaffer-scoop-bucket
 
 # 2. Install the tool
 scoop install scaffer
+
+#test
+
+scaff --scaff-help
  ```
+
+
+## 🛠 Manual Installation
+If you prefer not to use package managers:
+
+Go to the Releases section.
+
+Download the .zip file for Windows (scaffer-win-x64...).
+
+Unzip it into a safe folder.
+
+(optional) rename the Scaffer.CLI.exe into scaffer.exe so you can call `scaffer --scaff-build ...` instead of `Scaffer.CLI.exe --scaff-build...`
+
+Add that folder to your Environment Variables (PATH) to use the scaffer command from any terminal.
+
+
+
 
 ## Syntax
 
