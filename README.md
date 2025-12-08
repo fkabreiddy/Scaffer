@@ -19,7 +19,7 @@ If you already have [Scoop](https://scoop.sh/) installed, simply run these two c
 
 ```powershell
 # 1. Add the official bucket
-scoop bucket add fkabreiddy https://github.com/fkabreiddy/scaffer-scoop-bucket
+scoop bucket add Scaffer https://github.com/fkabreiddy/scaffer-scoop-bucket
 
 # 2. Install the tool
 scoop install scaffer
