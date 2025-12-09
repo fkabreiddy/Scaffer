@@ -113,7 +113,7 @@ tempend>>
     log??
 )
 
-@Template(`
+<<temp
 using System;
 
 namespace MyApp.Services
@@ -128,7 +128,7 @@ namespace MyApp.Services
         }
     }
 }
-`)
+tempend>>
 
 ```
 
