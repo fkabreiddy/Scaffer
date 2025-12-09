@@ -26,7 +26,7 @@ scoop install scaffer
 
 #test
 
-scaff --scaff-help
+scaffer --scaff-help
 
 #update
 scoop update // to update the buckets
@@ -137,7 +137,7 @@ namespace MyApp.Services
 build command (make sure to be on the `.scaff` file directory)
 
 ```bash
-scaff --scaff-build test 
+scaffer --scaff-build test 
     --scaff-param name=UserService 
     --scaff-param type=string 
     --scaff-param initial="John Doe"
@@ -166,12 +166,12 @@ namespace MyApp.Services
 ## Show available `.scaff` files
 
 ```bash
-scaff --scaff-list
+scaffer --scaff-list
 ```
 
 ## Show all commands
 
 ```bash
-scaff --scaff-help
+scaffer --scaff-help
 ```
 
