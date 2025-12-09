@@ -208,6 +208,9 @@ internal class Program
     
     private static void ShowHelp()
     {
+
+        Console.WriteLine();
+
         Console.WriteLine("Scaffer - Template Scaffolding CLI");
         Console.WriteLine();
         Console.WriteLine("Usage:");
@@ -218,7 +221,6 @@ internal class Program
         Console.WriteLine("  --scaff-route <path>         Output directory for the generated file");
         Console.WriteLine("  --scaff-out <name>           Name of the output file");
         Console.WriteLine("  --scaff-param <key=value>    Template parameter (repeatable)");
-        Console.WriteLine("  --scaff-init <name>          Creates a sample .scaff file");
         Console.WriteLine("  --scaff-list                 Lists all .scaff files");
         Console.WriteLine("  --scaff-help                 Shows this help message");
         Console.WriteLine();
@@ -230,6 +232,8 @@ internal class Program
         Console.WriteLine("        --scaff-route ./output");
         Console.WriteLine("        --scaff-out index.html");
     }
+
+    
 
    
 }
