@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Scaffer.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0204a787c2800b3e540e30812d2702c50be1b66")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a670554abd2a4dcd5b9e602fcd244d7ae063da48")]
 [assembly: System.Reflection.AssemblyProductAttribute("Scaffer.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Scaffer.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

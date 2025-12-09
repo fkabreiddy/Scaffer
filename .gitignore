@@ -43,9 +43,10 @@ TestResults/
 coverage/
 coverage.json
 
-##compilador de .net
-bin/
-obj/
+# Excluir carpetas de compilación de .NET
+**/bin/
+**/obj/
+
 
 
 ##tests
