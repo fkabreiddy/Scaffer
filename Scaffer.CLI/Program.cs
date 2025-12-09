@@ -211,7 +211,7 @@ internal class Program
         Console.WriteLine("Scaffer - Template Scaffolding CLI");
         Console.WriteLine();
         Console.WriteLine("Usage:");
-        Console.WriteLine("  scaff [options]");
+        Console.WriteLine("  scaffer [options]");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --scaff-build <path>         Path to the .scaff file to build");
@@ -224,7 +224,7 @@ internal class Program
         Console.WriteLine();
        
         Console.WriteLine("Full example:");
-        Console.WriteLine("  scaff --scaff-build ./templates/page.scaff");
+        Console.WriteLine("  scaffer --scaff-build ./templates/page.scaff");
         Console.WriteLine("        --scaff-param title=Home");
         Console.WriteLine("        --scaff-param content=\"Hello World\" ");
         Console.WriteLine("        --scaff-route ./output");
