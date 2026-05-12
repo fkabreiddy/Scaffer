@@ -1,6 +1,7 @@
 ﻿using Scaffer.Core;
+using Scaffer.Core.Helpers;
 
-namespace Scaffer;
+namespace Scaffer.CLI;
 
 internal class Program
 {
@@ -17,34 +18,41 @@ internal class Program
 
         try
         {
-            var scaffBuild = GetArgValue(args, "--scaff-build");
-            var scaffRoute = GetArgValue(args, "--scaff-route");
-            var scaffOut = GetArgValue(args, "--scaff-out");
-            var scaffParams = GetAllParams(args, "--scaff-param");
-            var scaffHelp = args.Any(a => a.ToLower() == "--scaff-help");
-            var scaffList = args.Any(a => a.ToLower() == "--scaff-list");
+            var build =  ConsoleHelper.GetArgValue(args, "-b", "--build");
+            var route =  ConsoleHelper.GetArgValue(args, "-r", "--route");
+            var output = ConsoleHelper.GetArgValue(args, "-o", "--out", "--output");
+            var parameters = ConsoleHelper.GetParams(args, "-p");
 
-            if (scaffHelp)
+            var help = args.Any(a =>
+                a.Equals("-h", StringComparison.OrdinalIgnoreCase) ||
+                a.Equals("--help", StringComparison.OrdinalIgnoreCase));
+
+            var list = args.Any(a =>
+                a.Equals("-l", StringComparison.OrdinalIgnoreCase) ||
+                a.Equals("--list", StringComparison.OrdinalIgnoreCase));
+
+            if (help)
             {
                 ShowHelp();
                 return 0;
             }
 
-            if (scaffList)
+            if (list)
             {
                 ListScaffFiles();
                 return 0;
             }
 
           
-            if (scaffBuild != null)
+            if (build != null)
             {
-                await BuildScaff(scaffBuild, scaffParams, scaffRoute, scaffOut);
+                var scaffer = new Scaffer();
+                await scaffer.Build(build, parameters, route, output);
                 return 0;
             }
 
             ConsoleHelper.WriteLineColor("Invalid command", ConsoleColor.Red);
-            Console.WriteLine("Use '--scaff-help' to see available commands");
+            Console.WriteLine("Use '-h' to see available commands");
             return 1;
         }
         catch (Exception ex)
@@ -54,119 +62,6 @@ internal class Program
         }
     }
     
-    private static Dictionary<string, string> GetAllParams(string[] args, string argName)
-    {
-        var parameters = new Dictionary<string, string>();
-        
-        for (int i = 0; i < args.Length; i++)
-        {
-            if (args[i].ToLower() == argName.ToLower() && i + 1 < args.Length)
-            {
-                var paramValue = args[i + 1];
-                var parts = paramValue.Split('=', 2);
-                
-                if (parts.Length == 2)
-                {
-                    var key = parts[0].Trim();
-                    var value = parts[1].Trim();
-                    parameters[key] = value;
-                }
-            }
-        }
-        
-        return parameters;
-    }
-    private static string? GetArgValue(string[] args, string argName)
-    {
-        var index = Array.FindIndex(args, a => a.ToLower() == argName.ToLower());
-        if (index >= 0 && index + 1 < args.Length)
-        {
-            return args[index + 1];
-        }
-        return null;
-    }
-    
-     private static async Task BuildScaff(string scaffPath, Dictionary<string, string> parameters, string? scaffRoute, string? scaffOut)
-    {
-        try
-        {
-            if(!scaffPath.EndsWith(".scaff"))
-            {
-                scaffPath = scaffPath + ".scaff";
-            }
-            if (!File.Exists(scaffPath))
-            {
-                ConsoleHelper.WriteLineColor($"We could no fint the specefied fiel or path '{scaffPath}'", ConsoleColor.Red);
-                return;
-            }
-            
-
-            Console.WriteLine();
-            ConsoleHelper.WriteLineColor($"Building file from: {scaffPath}", ConsoleColor.Blue);
-
-            var content = await File.ReadAllTextAsync(scaffPath);
-            var scaff = new ScaffFile();
-            try
-            { 
-                scaff = ScaffParser.Parse(content);
-
-            }
-            catch(Exception ex)
-            {
-                ConsoleHelper.WriteLineColor(ex.InnerException?.Message ?? ex.Message, ConsoleColor.Red);
-                return;
-
-            }
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            if (string.IsNullOrEmpty(scaff.Template))
-            {
-                ConsoleHelper.WriteLineColor("Your file is missing the <<temp> and <tempend>> marks", ConsoleColor.Red);
-                return;
-            }
-
-            var finalOutputDir = scaffRoute ?? scaff.Meta.GetValueOrDefault("Output", "./");
-
-            if (string.IsNullOrEmpty(scaffRoute))
-            {
-                ConsoleHelper.WriteLineColor("You did not specified the output route. The created file will be added to the current directory or the one from the Output @Meta field", ConsoleColor.DarkYellow);
-            }
-            var finalFileName = scaffOut ?? scaff.Meta.GetValueOrDefault("Name", $"output{new Guid().ToString()}");
-            
-            if (string.IsNullOrEmpty(scaffOut))
-            {
-                ConsoleHelper.WriteLineColor($"You did not specified the name of the file. The created file will be named as output{new Guid().ToString()} or the one specified in the Name @Meta field", ConsoleColor.DarkYellow);
-            }
-            var extension = scaff.Meta.GetValueOrDefault("Extension", ".txt");
-            
-           
-            
-            if (!string.IsNullOrEmpty(scaffOut) && Path.HasExtension(scaffOut))
-            {
-                extension = "";
-            }
-
-            Console.WriteLine($"\u001b[32mDirectory: \u001b[0m {finalOutputDir}");
-            Console.WriteLine($"\u001b[32mExtension: \u001b[0m {extension}");
-            Console.WriteLine($"\u001b[32mFile Name: \u001b[0m {finalFileName}{extension}");
-
-            
-            if (parameters.Count > 0)
-            {
-                ConsoleHelper.WriteLineColor("Parameters: ", ConsoleColor.Green);
-                foreach (var kvp in parameters)
-                {
-                    Console.WriteLine($"{kvp.Key} => {kvp.Value}");
-                }
-            }
-
-            await ScaffGenerator.Generate(scaff, parameters, finalOutputDir, finalFileName + extension);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
     private static void ListScaffFiles()
     {
         var scaffFiles = Directory.GetFiles(".", "*.scaff");
@@ -189,13 +84,7 @@ internal class Program
             {
                 var content = File.ReadAllText(file);
                 var scaff = ScaffParser.Parse(content);
-                
-                if (scaff.Meta.ContainsKey("Name"))
-                    Console.WriteLine($"    Name: {scaff.Meta["Name"]}");
-                if (scaff.Meta.ContainsKey("Extension"))
-                    Console.WriteLine($"    Extension: {scaff.Meta["Extension"]}");
-                if (scaff.Meta.ContainsKey("Output"))
-                    Console.WriteLine($"    Output: {scaff.Meta["Output"]}");
+           
             }
             catch(Exception ex)
             {
@@ -208,29 +97,51 @@ internal class Program
     
     private static void ShowHelp()
     {
-
         Console.WriteLine();
 
-        Console.WriteLine("Scaffer - Template Scaffolding CLI");
+        Console.WriteLine("Scaffer - Universal Scaffolding Generator CLI");
         Console.WriteLine();
+
         Console.WriteLine("Usage:");
-        Console.WriteLine("  scaffer [options]");
+        Console.WriteLine("  scaffer [command] [options]");
         Console.WriteLine();
+
+        Console.WriteLine("Commands:");
+        Console.WriteLine("  -b, --build <template>       Builds a .scaff template");
+        Console.WriteLine("  -l, --list                   Lists all available .scaff files");
+        Console.WriteLine("  -h, --help                   Shows this help message");
+        Console.WriteLine();
+
         Console.WriteLine("Options:");
-        Console.WriteLine("  --scaff-build <path>         Path to the .scaff file to build");
-        Console.WriteLine("  --scaff-route <path>         Output directory for the generated file");
-        Console.WriteLine("  --scaff-out <name>           Name of the output file");
-        Console.WriteLine("  --scaff-param <key=value>    Template parameter (repeatable)");
-        Console.WriteLine("  --scaff-list                 Lists all .scaff files");
-        Console.WriteLine("  --scaff-help                 Shows this help message");
+        Console.WriteLine("  -r, --route <path>           Output directory");
+        Console.WriteLine("  -o, --out <name>             Output file name");
+        Console.WriteLine("  -p, --param <key=value>      Template parameter (repeatable)");
         Console.WriteLine();
-       
-        Console.WriteLine("Full example:");
-        Console.WriteLine("  scaffer --scaff-build ./templates/page.scaff");
-        Console.WriteLine("        --scaff-param title=Home");
-        Console.WriteLine("        --scaff-param content=\"Hello World\" ");
-        Console.WriteLine("        --scaff-route ./output");
-        Console.WriteLine("        --scaff-out index.html");
+
+        Console.WriteLine("Examples:");
+        Console.WriteLine();
+
+        Console.WriteLine("  scaffer -b feature");
+        Console.WriteLine();
+
+        Console.WriteLine("  scaffer -b feature -p name=User");
+        Console.WriteLine();
+
+        Console.WriteLine("  scaffer -b page");
+        Console.WriteLine("          -p title=Home ");
+        Console.WriteLine("          -p content=\"Hello World\" ");
+        Console.WriteLine("          -r ./pages");
+        Console.WriteLine("          -o index.html");
+        Console.WriteLine();
+
+        Console.WriteLine("Long syntax:");
+        Console.WriteLine();
+
+        Console.WriteLine("  scaffer --build page");
+        Console.WriteLine("          --param title=Home");
+        Console.WriteLine("          --route ./output");
+        Console.WriteLine("          --out index.html");
+        Console.WriteLine();
     }
 
     

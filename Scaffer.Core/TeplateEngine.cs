@@ -10,9 +10,7 @@ public static class TemplateEngine
         Console.WriteLine();
         Console.WriteLine("Building template...");
         var declared = new Dictionary<string, string>();
-
         
-
         foreach (var kv in templateParams)
         {
             

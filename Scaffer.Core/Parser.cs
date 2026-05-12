@@ -1,82 +1,63 @@
 ﻿using System.Text.RegularExpressions;
+using Scaffer.Core.Helpers;
 
 namespace Scaffer.Core;
 
-
-public class ScaffFile
-{
-    public Dictionary<string, string> Meta { get; set; } = new();
-    public string Template { get; set; } = "";
-
-    public Dictionary<string, string> Params { get; set; } = new();
-}
 public static class ScaffParser
 {
-    public static ScaffFile Parse(string content)
+    extension(string content)
     {
-        var result = new ScaffFile();
-
-        // Parse Meta
-        var metaMatch = Regex.Match(content, @"@Meta\s*\(([\s\S]*?)\)", RegexOptions.Multiline);
-        if (metaMatch.Success)
+        public ScaffFile Parse()
         {
-            var lines = metaMatch.Groups[1].Value
-                .Split('\n')
-                .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrWhiteSpace(x) && x.Contains(":"))
-                .ToList();
+            var result = new ScaffFile();
 
-            foreach (var line in lines)
-            {
-                var parts = line.Split(":", 2);
-                if (parts.Length == 2)
-                {
-                    var key = parts[0].Trim();
-                    var value = parts[1].Trim().Trim('"');
-                    result.Meta[key] = value;
-                }
-            }
+            ParseParams(content, result);
+            ParseTemplate(content, result);
+
+            return result;
         }
-
-        var templateMatch = Regex.Match(content, @"^<<temp\s*([\s\S]*?)\s*tempend>>", RegexOptions.Multiline);
-      
-        if (templateMatch.Success)
-        {
-            result.Template = templateMatch.Groups[1].Value.Trim();
-        }
-        
-        
-
-        var paramsMatch = Regex.Match(content, @"@Params\s*\(\s*([\s\S]*?)\s*\)", RegexOptions.Multiline);
-        if (paramsMatch.Success)
-        {
-            var block = paramsMatch.Groups[1].Value;
-            var lineRegex = new Regex(@"^\s*([A-Za-z0-9_]+)\?\?(.*)\s*$", RegexOptions.Multiline);
-            ConsoleHelper.WriteLineColor("Obtaining parameters from @Params...", ConsoleColor.Green);
-            Console.WriteLine();
-
-            foreach (Match m in lineRegex.Matches(block))
-            {
-                if(result.Params.ContainsKey(m.Groups[1].Value.Trim()))
-                {
-                    throw new ArgumentException(
-                        $"There is a repeated param called {m.Groups[1].Value.Trim()}. Params names should be unique inside a template.");
-                }
-                var key = m.Groups[1].Value.Trim();
-                var fallback = m.Groups[2].Value.Trim(); // "" si no hay fallback
-                result.Params[key] = fallback;
-                
-                Console.WriteLine($"{key} => {fallback}", ConsoleColor.Blue);
-            }
-            Console.WriteLine();
-
-        }
-        else
-        {
-            ConsoleHelper.WriteLineColor("No @Params directive was found. The parameters from the <<temp may not be asigned correctly", ConsoleColor.Yellow);
-            Console.WriteLine();
-        }
-        
-        return result;
     }
+    
+    
+    private static void ParseParams(string content, ScaffFile result)
+    {
+        var match = Regex.Match(content, @"@Params\s*\(\s*([\s\S]*?)\s*\)", RegexOptions.Multiline);
+        if (!match.Success)
+        {
+            ConsoleHelper.WriteLineColor("No @Params directive was found. Proceeding without default values.", ConsoleColor.Yellow);
+            return;
+        }
+
+        Console.WriteLine();
+        ConsoleHelper.WriteLineColor("* Obtaining @params...", ConsoleColor.Magenta);
+        Console.WriteLine();
+
+        var block = match.Groups[1].Value;
+        var lineRegex = new Regex(@"^\s*([A-Za-z0-9_]+)\?\?(.*)\s*$", RegexOptions.Multiline);
+
+        foreach (Match m in lineRegex.Matches(block))
+        {
+            var key = m.Groups[1].Value.Trim();
+            var fallback = m.Groups[2].Value.Trim();
+
+            if (result.Params.ContainsKey(key))
+            {
+                throw new ArgumentException($"Repeated parameter: '{key}'. Parameter names must be unique.");
+            }
+            
+            result.Params[key] = fallback;
+            ConsoleHelper.WriteLineColor($"  -p: {key} = {(string.IsNullOrEmpty(fallback) ? "(no default value)" : fallback)}", string.IsNullOrEmpty(fallback) ? ConsoleColor.Yellow : ConsoleColor.Green);
+        }
+        Console.WriteLine();
+    }
+
+    private static void ParseTemplate(string content, ScaffFile result)
+    {
+        var match = Regex.Match(content, @"<<temp\s*([\s\S]*?)\s*tempend>>", RegexOptions.Multiline);
+        if (match.Success)
+        {
+            result.Template = match.Groups[1].Value.Trim();
+        }
+    }
+  
 }
