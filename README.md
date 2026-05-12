@@ -47,7 +47,7 @@ If you prefer not to use package managers:
 ### Define the parameters
 
 ```text
-@Params(
+@params(
   name??
 )
 
