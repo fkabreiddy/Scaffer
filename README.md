@@ -1,21 +1,18 @@
 # Scaffer
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/fkabreiddy/Scaffer)
-![Platform](https://img.shields.io/badge/platform-win-blue)
-
 **Universal Scaffolding Generator CLI.** Scaffer is a command-line tool designed to generate project structures and files quickly and efficiently.
 
 > **Note:** Currently, official support and testing are focused on **Windows**. macOS and Linux versions are considered experimental.
 
 ---
 
-## 📦 Installation
+## Installation
 
 The recommended way to install Scaffer on Windows is via **Scoop**.
 
-### 🪟 Via Scoop (Recommended)
+### Via Scoop (Recommended)
 
-If you already have [Scoop](https://scoop.sh/) installed, simply run these two commands in PowerShell:
+If you already have [Scoop]() installed, simply run these two commands in PowerShell:
 
 ```powershell
 # 1. Add the official bucket
@@ -24,89 +21,66 @@ scoop bucket add Scaffer https://github.com/fkabreiddy/scaffer-scoop-bucket
 # 2. Install the tool
 scoop install scaffer
 
-#test
+# Test the installation
+scaffer --help
 
-scaffer --scaff-help
-
-#update
-scoop update // to update the buckets
+# Update Scaffer
+scoop update # to update the buckets
 scoop update scaffer
- ```
 
+```
 
-## 🛠 Manual Installation
+### Manual Installation
+
 If you prefer not to use package managers:
 
-Go to the Releases section.
+1. Go to the Releases section.
+2. Download the `.zip` file for Windows (`scaffer-win-x64...`).
+3. Unzip it into a safe folder.
+4. (Optional) Rename `Scaffer.CLI.exe` to `scaffer.exe` so you can call `scaffer -b ...` instead of `Scaffer.CLI.exe -b ...`.
+5. Add that folder to your Environment Variables (PATH) to use the `scaffer` command from any terminal.
 
-Download the .zip file for Windows (scaffer-win-x64...).
-
-Unzip it into a safe folder.
-
-(optional) rename the Scaffer.CLI.exe into scaffer.exe so you can call `scaffer --scaff-build ...` instead of `Scaffer.CLI.exe --scaff-build...`
-
-Add that folder to your Environment Variables (PATH) to use the scaffer command from any terminal.
-
-
-
+---
 
 ## Syntax
 
+### Define the parameters
 
-Define metadata
-
-```bash
-@Meta(
-
-  Extension: ".html"
-  Route: "./"
-  Name: "index"
-)
-```
-
-`Route`, and `Name` are optional values and they can be set in while generating the file with the `--scaff-route` and `--scaff-out` respectively.
-By default `./` is set to the route and a random `GUID` for the `Name`.
-
-Define the params
-
-```bash
-
+```text
 @Params(
-
   name??
 )
 
 ```
 
-Params are by default optional but you can add a fallback to them.
+Params are by default optional, but you can add a fallback (default value) to them using `??`.
 
-```bash
-....
- name??Jhon
- ....
+```text
+@params(
+  name??John
+)
+
 ```
 
-Use your params values in the `@Template` directive
+### Use your parameter values in the template directive
 
-```bash
+Enclose your template logic between `<<temp` and `tempend>>`.
+
+```text
 <<temp
  <p>{{value:name}}</p>
 tempend>>
+
 ```
 
+---
 
-## 📦 `.scaff` file example
+## `.scaff` file example
 
-`test.scaff`
+Create a file named `test.scaff`:
 
 ```csharp
-
-    
-@Meta(
-    Extension: ".cs"
-)
-
-@Params(
+@params(
     name??ExampleService
     type??string
     initial??"Hello World"
@@ -132,19 +106,21 @@ tempend>>
 
 ```
 
+### Build command
 
-
-build command (make sure to be on the `.scaff` file directory)
+Make sure to be in the same directory as the `.scaff` file, and specify the output name and extension using the `-o` flag:
 
 ```bash
-scaffer --scaff-build test 
-    --scaff-param name=UserService 
-    --scaff-param type=string 
-    --scaff-param initial="John Doe"
-    --scaff-param log="Data"
+scaffer -b test \
+    -p name=UserService \
+    -p type=string \
+    -p initial="John Doe" \
+    -p log="Data" \
+    -o UserService.cs
+
 ```
 
-The output
+### The output
 
 ```csharp
 using System;
@@ -161,17 +137,64 @@ namespace MyApp.Services
         }
     }
 }
+
 ```
 
-## Show available `.scaff` files
+---
+
+## Commands and Options
+
+Scaffer uses a standard short and long flag syntax.
+
+```text
+Usage:
+  scaffer [command] [options]
+
+Commands:
+  -b, --build <template>       Builds a .scaff template
+  -l, --list                   Lists all available .scaff files
+  -h, --help                   Shows this help message
+
+Options:
+  -r, --route <path>           Output directory
+  -o, --out <name>             Output file name
+  -p, --param <key=value>      Template parameter (repeatable)
+
+```
+
+### Examples
+
+**Basic build:**
 
 ```bash
-scaffer --scaff-list
+scaffer -b feature
+
 ```
 
-## Show all commands
+**Build with parameters:**
 
 ```bash
-scaffer --scaff-help
+scaffer -b feature -p name=User
+
 ```
 
+**Advanced build with multiple flags:**
+
+```bash
+scaffer -b page \
+        -p title=Home \
+        -p content="Hello World" \
+        -r ./pages \
+        -o index.html
+
+```
+
+**Long syntax equivalent:**
+
+```bash
+scaffer --build page \
+        --param title=Home \
+        --route ./output \
+        --out index.html
+
+```
