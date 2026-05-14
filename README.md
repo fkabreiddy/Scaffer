@@ -47,7 +47,7 @@ If you prefer not to use package managers:
 ### Define the parameters
 
 ```text
-@params(
+@Params(
   name??
 )
 
@@ -56,7 +56,7 @@ If you prefer not to use package managers:
 Params are by default optional, but you can add a fallback (default value) to them using `??`.
 
 ```text
-@params(
+@Params(
   name??John
 )
 
@@ -80,7 +80,7 @@ tempend>>
 Create a file named `test.scaff`:
 
 ```csharp
-@params(
+@Params(
     name??ExampleService
     type??string
     initial??"Hello World"
